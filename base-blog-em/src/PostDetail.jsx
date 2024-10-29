@@ -1,9 +1,21 @@
 import { fetchComments } from "./api";
+import { useQuery } from "@tanstack/react-query";
 import "./PostDetail.css";
 
 export function PostDetail({ post }) {
   // replace with useQuery
-  const data = [];
+  const {data, error, isError, isLoading} = useQuery({
+    queryKey: ["comments", post.id], // this is a dependency array. Anytime these changes, itll trigger a refetch
+    queryFn: ()=>fetchComments(post.id),
+    staleTime: 2000
+  });
+
+  if(isLoading){
+    return <h3>Loading</h3>
+  }
+  if(isError){
+    return <><h3>ERROR</h3><p>{error.toString()}</p></>
+  }
 
   return (
     <>
