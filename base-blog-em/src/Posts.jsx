@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchPosts, deletePost, updatePost } from "./api";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { PostDetail } from "./PostDetail";
 const maxPostPage = 10;
 
@@ -9,6 +9,16 @@ export function Posts() {
   const [selectedPost, setSelectedPost] = useState(null);
 
   const queryClient = useQueryClient();
+
+  // a mutation is just a call that alters the db. Delete, post, etc.
+  const deleteMutation = useMutation({
+    mutationFn: (postId) => deletePost(postId)
+  })
+
+  const updateTitleMutation = useMutation({
+    mutationFn: (postId) => updatePost(postId)
+  })
+
   useEffect(()=>{
     if(currentPage < maxPostPage){
       const nextPage = currentPage + 1;
@@ -31,7 +41,7 @@ export function Posts() {
     // gcTime: // how long to keep data around to use later before cache data expires. default is 5 min
   });
   if(isLoading) {
-    return <h3>Loading...</h3>;
+    return <h3>Loading</h3>;
   }
 
   if(isError) {
@@ -44,7 +54,12 @@ export function Posts() {
           <li
             key={post.id}
             className="post-title"
-            onClick={() => setSelectedPost(post)}
+            onClick={() => {
+              deleteMutation.reset();
+              updateTitleMutation.reset();
+              setSelectedPost(post);
+            }
+          }
           >
             {post.title}
           </li>
@@ -60,7 +75,7 @@ export function Posts() {
         </button>
       </div>
       <hr />
-      {selectedPost && <PostDetail post={selectedPost} />}
+      {selectedPost && <PostDetail post={selectedPost} deleteMutation={deleteMutation} updateTitleMutation={updateTitleMutation}/>}
     </>
   );
 }
