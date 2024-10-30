@@ -12,8 +12,8 @@ function App() {
       <ReactQueryDevtools/>
       <div className="App">
         <h1>Infinite SWAPI</h1>
-        <InfinitePeople />
-        {/* <InfiniteSpecies /> */}
+        {/* <InfinitePeople /> */}
+        <InfiniteSpecies />
       </div>
     </QueryClientProvider>
 
