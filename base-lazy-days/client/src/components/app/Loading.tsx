@@ -5,7 +5,7 @@ export function Loading() {
   // use React Query `useIsFetching` to determine whether or not to display
   // this is uper cool becasue it lets us look if anything is
   // loading in the loading component itself
-  // We can do global handling
+  // We can do global handling of fetching
   const isFetching = useIsFetching(); // returns number of calls in fetching state
   const display = isFetching ? "inherit" : "none";
 
