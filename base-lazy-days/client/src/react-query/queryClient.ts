@@ -1,4 +1,4 @@
-import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
+import { MutationCache, QueryCache, QueryClient, QueryClientConfig } from "@tanstack/react-query";
 
 import { toast } from "@/components/app/toast";
 
@@ -22,30 +22,32 @@ function errorHandler(title: string) {
   }
 }
 
-export const queryClient = new QueryClient({
-    defaultOptions: {
-      queries:{ //sets defaults for all queries
-        // sets staleTime to 10 min so things
-        // are fetched less frequently
-        staleTime: 600000, // 10 min
-        gcTime: 900000, // 15 min
-        refetchOnWindowFocus: false
-      }
-    },
-    // queryCache lets us set up an error handler in
-    // the queryClient
-    // super cool bc we can do global error handling
-    queryCache: new QueryCache({
-        onError: error =>{
-          const title = createTitle(error.message, 'query')
-          errorHandler(title)
-        }
-    }),
-
-    mutationCache: new MutationCache({
+export const queryClientOptions: QueryClientConfig = {
+  defaultOptions: {
+    queries:{ //sets defaults for all queries
+      // sets staleTime to 10 min so things
+      // are fetched less frequently
+      staleTime: 600000, // 10 min
+      gcTime: 900000, // 15 min
+      refetchOnWindowFocus: false
+    }
+  },
+  // queryCache lets us set up an error handler in
+  // the queryClient
+  // super cool bc we can do global error handling
+  queryCache: new QueryCache({
       onError: error =>{
-        const title = createTitle(error.message, 'mutation')
+        const title = createTitle(error.message, 'query')
         errorHandler(title)
       }
-  })
-});
+  }),
+
+  mutationCache: new MutationCache({
+    onError: error =>{
+      const title = createTitle(error.message, 'mutation')
+      errorHandler(title)
+    }
+})
+}
+
+export const queryClient = new QueryClient(queryClientOptions);
