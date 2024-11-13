@@ -29,5 +29,5 @@ export function useUserAppointments(): Appointment[] {
     queryKey: generateUserAppointmentsKey(userId, userToken),
     queryFn: () => getUserAppointments(userId, userToken)
   })
-  return [];
+  return userAppointments;
 }

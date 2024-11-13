@@ -1,5 +1,5 @@
 import { Spinner, Text } from "@chakra-ui/react";
-import { useIsFetching } from "@tanstack/react-query";
+import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 
 export function Loading() {
   // use React Query `useIsFetching` to determine whether or not to display
@@ -7,7 +7,8 @@ export function Loading() {
   // loading in the loading component itself
   // We can do global handling of fetching
   const isFetching = useIsFetching(); // returns number of calls in fetching state
-  const display = isFetching ? "inherit" : "none";
+  const isMutating = useIsMutating();
+  const display = isFetching || isMutating ? "inherit" : "none";
 
   return (
     <Spinner
